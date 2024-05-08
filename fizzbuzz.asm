@@ -32,12 +32,12 @@ FizzBuzz:
     loop:
         bge $t2, $t1, return
         lw $t6, 0($t0)           # a[i]
-        div $t6, $t3
-        mfhi $t5
-        beq $t5, $zero, fi        # mod 5
         div $t6, $t4
         mfhi $t5
-        beq $t5, $zero, bu        # mod 3
+        beq $t5, $zero, fi        # mod 3
+        div $t6, $t3
+        mfhi $t5
+        beq $t5, $zero, bu        # mod 5
 
         move $a0, $t6
         li $v0, 1
@@ -50,9 +50,9 @@ FizzBuzz:
         j inc_mem
 
     fi:
-        div $t6, $t4
+        div $t6, $t3
         mfhi $t5
-        beq $t5, $zero, fibu        # mod 3  (this time goes to fb)
+        beq $t5, $zero, fibu        # mod 5  (this time goes to fb)
         la $a0, fizz
         li $v0, 4
         syscall
