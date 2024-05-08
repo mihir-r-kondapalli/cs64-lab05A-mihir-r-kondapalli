@@ -21,8 +21,59 @@ ack:    .asciiz "\n"
 
 .text
 FizzBuzz:
-    move $t0 $a0
-    move $t1 $a1
+    move $t0 $a0       # array ptr
+    move $t1 $a1       # length
+
+    li $t2, 0         # counter
+
+    li $t3, 5         # 5
+    li $t4, 3         # 3
+
+    loop:
+        bge $t2, $t1, return
+        lw $t6, 0($t0)           # a[i]
+        div $t6, $t3
+        mfhi $t5
+        beq $t5, $zero, fi        # mod 5
+        div $t6, $t4
+        mfhi $t5
+        beq $t5, $zero, bu        # mod 3
+
+        move $a0, $t6
+        li $v0, 1
+        syscall
+
+        la $a0, space
+        li $v0, 4
+        syscall
+
+        j inc_mem
+
+    fi:
+        div $t6, $t4
+        mfhi $t5
+        beq $t5, $zero, fibu        # mod 3  (this time goes to fb)
+        la $a0, fizz
+        li $v0, 4
+        syscall
+        j inc_mem
+
+    bu:
+        la $a0, buzz
+        li $v0, 4
+        syscall
+        j inc_mem
+
+    fibu:
+        la $a0, fizzbuzz
+        li $v0, 4
+        syscall
+        j inc_mem
+
+    inc_mem:
+        addiu $t0, 4
+        addiu $t2, 1
+        j loop
 
     return:
         jr $ra
